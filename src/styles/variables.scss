@@ -1,0 +1,39 @@
+$color-black: #000;
+$color-dark-gray: #1d1d1b;
+$color-darker-gray: #333;
+$color-blue: #22aed1;
+$color-green: #62d250;
+$color-white: #fff;
+$color-light-gray: #f5f3f1;
+$color-medium-gray: #ecebe5;
+$color-medium-gray-2: #e6e6e6;
+$color-sepia: #f3ebdf;
+
+/**
+ * Add all colors to the map below, autoamtically generated classes will be created for all of them.
+ */
+
+$colors: (
+  '-black': $color-black,
+  '-dark-gray': $color-dark-gray,
+  '-darker-gray': $color-darker-gray,
+  '-blue': $color-blue,
+  '-green': $color-green,
+  '-white': $color-white,
+  '-light-gray': $color-light-gray,
+  '-medium-gray': $color-medium-gray,
+  '-medium-gray-2': $color-medium-gray-2,
+  '-sepia': $color-sepia
+);
+
+@mixin desktop-max {
+  @media screen and (min-width: 1680px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media screen and (max-width: 720px) {
+    @content;
+  }
+}

@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Manrope';
+  box-sizing: border-box;
+  margin: 0;
+  color: $color-dark-gray;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/**
+ * The following lines generate classes for all colors defined in variables.scss.
+ * You can create new @mixin and add it to the @each function via @include for more automatically generated classes.
+ */
+
+@mixin create-color($color) {
+  .color#{$color} {
+    color: map-get($colors, $color);
+  }
+}
+
+@each $color-name, $color in $colors {
+  @include create-color($color-name);
+}
