@@ -60,6 +60,9 @@
                 {/each}
               </Flex>
             </td>
+            <td>
+              <Button width="150px" href="/rules/{ruleset.id}/edit">Upravit</Button>
+            </td>
           </tr>
         {/each}
       </tbody>
@@ -95,7 +98,7 @@
 
   tr > td:last-child {
     font-weight: 500;
-    width: 20%;
+    width: 10%;
 
     text-align: left;
   }

@@ -17,7 +17,7 @@
     <Heading>Rozúčtování</Heading>
     <Flex>
       <Button href="/rules">Všechny sady pravidel</Button>
-      <Button href="/create">Vytvořit sadu pravidel</Button>
+      <Button href="/rules/create">Vytvořit sadu pravidel</Button>
     </Flex>
   </Flex>
 </Styled>
