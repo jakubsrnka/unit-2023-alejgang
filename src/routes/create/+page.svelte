@@ -72,9 +72,9 @@
             ? 'relative'
             : 'rest',
         amount: newAmountInt,
-        companyUnit: companyUnits.find((unit) => unit.id == parseInt(newCompanyId)) ?? {
-          id: 0,
-          nazev: 'N/A'
+        companyUnit: {
+          id: parseInt(newCompanyId),
+          nazev: companyUnits.find((unit) => unit.id == parseInt(newCompanyId))?.nazev ?? 'N/A'
         }
       }
     ]);
