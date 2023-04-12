@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import type { Invoice } from '$types/invoice';
+import { findAll } from '$lib/db';
 
 export const load = (async ({ cookies, params }) => {
   const authSessionId = cookies.get('authSessionId');
@@ -13,8 +14,6 @@ export const load = (async ({ cookies, params }) => {
   }
 
   const invoiceId = params.objectId;
-
-  console.log(`${companyUrl}/faktura-prijata/${invoiceId}.json?detail=full`);
 
   const invoice: Invoice | null = await fetch(
     `${companyUrl}/faktura-prijata/${invoiceId}.json?detail=full`,
@@ -42,6 +41,7 @@ export const load = (async ({ cookies, params }) => {
   }
 
   return {
-    invoice: invoice
+    invoice: invoice,
+    rulesets: await findAll(companyUrl, authSessionId, 'ruleset')
   };
 }) satisfies PageServerLoad;

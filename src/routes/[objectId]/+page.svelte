@@ -7,55 +7,6 @@
   import type { PageData } from './$types';
 
   export let data: PageData;
-
-  const rules: RuleSet[] = [
-    {
-      name: 'pravidlo 1',
-      rules: [
-        {
-          id: 0,
-          type: 'absolute',
-          amount: 3000,
-          companyUnit: {
-            id: 1,
-            nazev: 'C'
-          }
-        },
-        {
-          id: 1,
-          type: 'relative',
-          amount: 30,
-          companyUnit: {
-            id: 3,
-            nazev: 'M'
-          }
-        }
-      ]
-    },
-    {
-      name: 'pravidlo 2',
-      rules: [
-        {
-          id: 0,
-          type: 'absolute',
-          amount: 3000,
-          companyUnit: {
-            id: 1,
-            nazev: 'C'
-          }
-        },
-        {
-          id: 1,
-          type: 'relative',
-          amount: 30,
-          companyUnit: {
-            id: 3,
-            nazev: 'M'
-          }
-        }
-      ]
-    }
-  ];
 </script>
 
 <Main>
@@ -90,7 +41,7 @@
   <Styled padding="0 8px" backgroundColor="#eee" borderRadius="4px" width="100%">
     <table>
       <tbody>
-        {#each rules as ruleset}
+        {#each data.rulesets as ruleset}
           <tr>
             <td>{ruleset.name}</td>
             <td>
