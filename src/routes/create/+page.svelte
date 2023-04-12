@@ -78,7 +78,7 @@
         }
       }
     ]);
-    console.log(companyUnits);
+
     newAmount = '0';
   }
 

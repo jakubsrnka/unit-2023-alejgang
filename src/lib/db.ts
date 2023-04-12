@@ -10,7 +10,6 @@ async function getGlobalStore(
   key: string
 ): Promise<GlobalStore | null> {
   const store = await sendRequest<GlobalStore[]>(url, session, ENDPOINT, 'GET');
-  console.log(store);
   return store?.find((entity) => entity.klic === key) ?? null;
 }
 
@@ -34,7 +33,6 @@ export async function saveCollection<C extends keyof Database>(
 ): Promise<boolean> {
   const store = await getGlobalStore(url, session, `alejgang:database:${collection}`);
   const value = JSON.stringify(data);
-  console.log(value);
   if (store === null) {
     await sendRequest<
       {
