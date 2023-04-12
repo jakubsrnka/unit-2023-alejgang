@@ -150,6 +150,10 @@
       </tbody>
     </table>
   </Styled>
+
+  <Styled margin="1rem 0 0 0">
+    <Button href={`/${data.objectId}/manual`}>Manuální rozúčtování</Button>
+  </Styled>
 </Main>
 
 <style lang="scss">
