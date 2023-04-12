@@ -1,4 +1,4 @@
-import type { RuleSet } from "./rules";
+import type { RuleSet } from './rules';
 
 export type Database = {
   user: User[];
@@ -25,5 +25,5 @@ export interface Role extends Entity {
 }
 
 export interface RuleSetDb extends Entity {
-  ruleset: RuleSet
+  ruleset: RuleSet;
 }

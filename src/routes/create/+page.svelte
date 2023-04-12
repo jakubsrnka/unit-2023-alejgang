@@ -8,6 +8,8 @@
   import Flex from '$components/layout/Flex.svelte';
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
+  import { save } from '$lib/db';
+  import type { RuleSetDb } from '$types/db';
   import type { RuleSet } from '$types/rules';
   import type { PageData } from './$types';
 
@@ -82,6 +84,24 @@
 
   function removeRule(id: number) {
     rules.rules = rules.rules.filter((rule) => rule.id !== id);
+  }
+
+  async function saveRules() {
+    if (rules.rules.length === 0) {
+      errorMessage = 'Nelze uložit prázdnou sadu pravidel.';
+      return;
+    }
+    if (rules.name === '') {
+      errorMessage = 'Nelze uložit sadu pravidel bez jména.';
+      return;
+    }
+    const ruleSet: RuleSetDb = {
+      ruleset: {
+        name: rules.name,
+        rules: rules.rules
+      }
+    };
+    await save('rulesets', ruleSet);
   }
 
   $: rules.name = setName;
@@ -159,5 +179,5 @@
     <Button on:click={addRule}>Přidat pravidlo</Button>
   </Flex>
 
-  <Button on:click={() => console.log(rules)}>gimme the stuff</Button>
+  <Button on:click={saveRules}>Uložit sadu pravidel</Button>
 </Main>
