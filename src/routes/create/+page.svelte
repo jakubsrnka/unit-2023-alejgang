@@ -19,6 +19,8 @@
   export let newRuleType: string;
   export let newCompanyId: string;
 
+  let newRuleId: number = 0;
+
   let errorMessage: string | undefined = undefined;
   const companyUnits = data.companyUnits;
 
@@ -48,16 +50,20 @@
     }
     rules.rules = rules.rules.concat([
       {
-        id: rules.rules.length,
+        id: newRuleId++,
         type: newRuleType === 'absolute' ? 'absolute' : 'relative',
         amount: parseInt(newAmount),
         companyUnit: {
           id: parseInt(newCompanyId),
-          name: companyUnits.find((unit) => unit.id === parseInt(newCompanyId))?.name ?? ''
+          name: companyUnits.find((unit) => unit.id == parseInt(newCompanyId))?.name ?? ''
         }
       }
     ]);
     newAmount = '0';
+  }
+
+  function removeRule(id: number) {
+    rules.rules = rules.rules.filter((rule) => rule.id !== id);
   }
 
   $: rules.name = setName;
@@ -113,7 +119,7 @@
             borderRadius="4px">{rule.companyUnit.name}</Styled
           >
         </Flex>
-        <div>
+        <div on:click={() => removeRule(rule.id)} on:keypress={() => removeRule(rule.id)}>
           <Icon icon="cross" />
         </div>
       </Flex>
