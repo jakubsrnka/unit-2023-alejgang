@@ -19,8 +19,6 @@
   export let newRuleType: string;
   export let newCompanyId: string;
 
-  let newRuleId: number = 0;
-
   let errorMessage: string | undefined = undefined;
   const companyUnits = data.companyUnits;
 
@@ -30,7 +28,21 @@
   };
 
   function addRule() {
-    if (newAmount === '0' || newAmount === '') {
+    const newAmountInt = parseInt(newAmount);
+
+    if (newRuleType === 'rest') {
+      let hasRestRule = false;
+      rules.rules.forEach((rule) => {
+        if (rule.type === 'rest') {
+          hasRestRule = true;
+        }
+      });
+      if (hasRestRule) {
+        errorMessage = 'Nelze přidat více pravidel typu "Zbytek".';
+        return;
+      }
+    }
+    if ((newAmount === '0' || newAmount === '') && newRuleType !== 'rest') {
       errorMessage = 'Nelze přidat pravidlo s hodnotou 0.';
       return;
     }
@@ -38,7 +50,7 @@
       errorMessage = 'Pravidlu musí být přiřazeno středisko';
       return;
     }
-    let totalPercentage = newRuleType === 'relative' ? parseInt(newAmount) : 0;
+    let totalPercentage = newRuleType === 'relative' ? newAmountInt : 0;
     rules.rules
       .filter((rule) => rule.type === 'relative')
       .forEach((rule) => {
@@ -50,15 +62,21 @@
     }
     rules.rules = rules.rules.concat([
       {
-        id: newRuleId++,
-        type: newRuleType === 'absolute' ? 'absolute' : 'relative',
-        amount: parseInt(newAmount),
+        id: rules.rules.length,
+        type:
+          newRuleType === 'absolute'
+            ? 'absolute'
+            : newRuleType === 'relative'
+            ? 'relative'
+            : 'rest',
+        amount: newAmountInt,
         companyUnit: {
           id: parseInt(newCompanyId),
           name: companyUnits.find((unit) => unit.id == parseInt(newCompanyId))?.name ?? ''
         }
       }
     ]);
+    console.log(companyUnits);
     newAmount = '0';
   }
 
@@ -110,9 +128,13 @@
     {#each rules.rules as rule}
       <Flex width="100%" alignItems="center" justifyContent="space-between">
         <Flex alignItems="center">
-          <Styled padding="4px" backgroundColor="#ccc" borderRadius="4px"
-            >{rule.amount}{rule.type === 'absolute' ? 'Kč' : '%'}</Styled
-          >
+          <Styled padding="4px" backgroundColor="#ccc" borderRadius="4px">
+            {#if rule.type === 'rest'}
+              Zbytek
+            {:else}
+              {rule.amount}{rule.type === 'absolute' ? 'Kč' : '%'}
+            {/if}
+          </Styled>
           <Icon icon="arrow-right" /> středisko: <Styled
             padding="4px"
             backgroundColor="#ddd"
