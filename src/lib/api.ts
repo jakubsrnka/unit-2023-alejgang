@@ -26,7 +26,7 @@ export async function sendRequest<T, B = object>(
 
   const json = await response.json();
   const data = (json as Response<T>).winstrom;
-  if (body === undefined) {
+  if (body !== undefined) {
     return data['results'];
   }
 

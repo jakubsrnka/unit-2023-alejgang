@@ -6,6 +6,7 @@ const ENDPOINT = 'global-store';
 
 async function getGlobalStore(key: string): Promise<GlobalStore | null> {
   const store = await sendRequest<GlobalStore[]>(ENDPOINT, 'GET');
+  console.log(store);
   return store?.find((entity) => entity.klic === key) ?? null;
 }
 
@@ -23,13 +24,37 @@ export async function saveCollection<C extends keyof Database>(
   collection: C,
   data: ValueOf<C>[]
 ): Promise<boolean> {
-  const store = (await getGlobalStore(`alejgang:database:${collection}`)) ?? {
-    klic: `alejgang:database:${collection}`,
-    hodnota: '[]'
-  };
-  store.hodnota = JSON.stringify(data);
-  const response = await sendRequest<GlobalStore[]>(ENDPOINT, 'POST', store);
-  console.log(response);
+  const store = await getGlobalStore(`alejgang:database:${collection}`);
+  const value = JSON.stringify(data);
+  console.log(value);
+  if (store === null) {
+    await sendRequest<
+      {
+        [key: string]: string;
+      }[]
+    >(ENDPOINT, 'POST', {
+      winstrom: {
+        'global-store': {
+          klic: `alejgang:database:${collection}`,
+          hodnota: value
+        }
+      }
+    });
+  } else {
+    await sendRequest<
+      {
+        [key: string]: string;
+      }[]
+    >(ENDPOINT + '/' + store.id, 'PUT', {
+      winstrom: {
+        'global-store': {
+          id: store.id,
+          klic: `alejgang:database:${collection}`,
+          hodnota: value
+        }
+      }
+    });
+  }
   return true;
 }
 
@@ -60,17 +85,20 @@ export async function findAll<C extends keyof Database>(collection: C): Promise<
 }
 
 export async function save<C extends keyof Database>(collection: C, entity: ValueOf<C>) {
-  const data = await getCollection(collection);
   let found = false;
-  data.map((item) => {
-    const key = 'id' as keyof ValueOf<C>;
-    if (item[key] === entity[key]) {
-      found = true;
-      return entity;
-    }
-    return item;
-  });
+  const key = 'id' as keyof ValueOf<C>;
+  const data = (await getCollection(collection))
+    .filter((item) => item[key] !== undefined)
+    .map((item) => {
+      if (item[key] === entity[key]) {
+        found = true;
+        return entity;
+      }
+      return item;
+    });
   if (!found) {
+    entity[key] = (((data[data.length - 1]?.[key] ?? 0) as number) +
+      1) as ValueOf<C>[keyof ValueOf<C>];
     data.push(entity);
   }
   return await saveCollection(collection, data);
