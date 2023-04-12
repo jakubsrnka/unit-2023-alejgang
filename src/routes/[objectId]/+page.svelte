@@ -9,7 +9,6 @@
   import type { RuleSet } from '$types/db';
   import { writable } from 'svelte/store';
   import type { PageData } from './$types';
-  import { run_all } from 'svelte/internal';
 
   export let data: PageData;
   let errorMessage: string | undefined = undefined;
@@ -147,7 +146,17 @@
   <Styled padding="0 8px" backgroundColor="#eee" borderRadius="4px" width="100%">
     <table>
       <tbody>
-        {#each data.rulesets.filter(filterRuleset) as ruleset}
+        {#each data.rulesets
+          .filter(filterRuleset)
+          .map((ruleset) => ({ ...ruleset, rules: ruleset.rules.sort((a, b) => {
+              if (a.type === 'rest') {
+                return 1;
+              }
+              if (a.type === b.type) {
+                return b.amount - a.amount;
+              }
+              return a.type === 'relative' ? -1 : 1;
+            }) })) as ruleset}
           <tr>
             <td>{ruleset.name}</td>
             <td>
