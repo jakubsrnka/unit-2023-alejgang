@@ -143,7 +143,15 @@
     <Input name="setName" bind:value={setName} label="Jméno sady pravidel" width="420px" />
   </Styled>
   <Flex gap="12px" direction="column" width="100%">
-    {#each rules.rules as rule}
+    {#each rules.rules.sort((a, b) => {
+      if (a.type === 'rest') {
+        return 1;
+      }
+      if (a.type === b.type) {
+        return b.amount - a.amount;
+      }
+      return a.type === 'relative' ? -1 : 1;
+    }) as rule}
       <Flex width="100%" alignItems="center" justifyContent="space-between">
         <Flex alignItems="center">
           <Styled padding="4px" backgroundColor="#ccc" borderRadius="4px">
