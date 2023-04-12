@@ -4,6 +4,7 @@ export const load = (async ({ data, params }) => {
   return {
     companyUrl: data.companyUrl,
     authSessionId: data.authSessionId,
-    objectId: params.objectId
+    objectId: params.objectId,
+    invoice: data.invoice
   };
 }) satisfies PageLoad;
