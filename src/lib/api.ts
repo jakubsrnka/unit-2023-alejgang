@@ -30,5 +30,5 @@ export async function sendRequest<T, B = object>(
     return data['results'];
   }
 
-  return data[key];
+  return data[key.split('/').pop() ?? 'results'];
 }
