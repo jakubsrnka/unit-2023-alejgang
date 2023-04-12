@@ -6,7 +6,7 @@
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
   import Input from '$components/elements/Input.svelte';
-  import type { RuleSet } from '$types/db';
+  import type { Rule, RuleSet } from '$types/db';
   import type { PageData } from './$types';
   import Divider from '$components/layout/Divider.svelte';
   import { save } from '$lib/db';
@@ -16,7 +16,7 @@
 
   export let data: PageData;
 
-  function filterRuleset(ruleset: RuleSet) {
+  function filterRuleset(ruleset: RuleSet, flag: boolean) {
     const sum = parseInt(data.invoice.sum);
     const perctSum = ruleset.rules.reduce((acc, rule) => {
       if (rule.type === 'relative') {
@@ -33,7 +33,7 @@
     const isRest = ruleset.rules.some((rule) => rule.type === 'rest');
     const perctSumAbsolute = (sum * perctSum) / 100;
     const sumSumSum = perctSumAbsolute + absoluteSum;
-    return sumSumSum == sum || (isRest && sumSumSum < sum);
+    return sumSumSum == sum || ((isRest || flag) && sumSumSum < sum);
   }
 
   let setName: string;
@@ -58,7 +58,14 @@
       }
       return acc;
     }, 0);
+
+    if (!filterRuleset(ruleset, false)) {
+      errorMessage = 'Rozdělení musí pokrýt celou fakturu!';
+      return;
+    }
+
     $saving = ruleset.id;
+
     await sendRequest($companyUrl, $sessionId, 'faktura-prijata', 'POST', {
       winstrom: {
         '@version': '1.0',
@@ -143,22 +150,32 @@
       errorMessage = 'Nelze přidat pravidla tak, aby dohromady přesahovaly 100%.';
       return;
     }
-    rules.rules = rules.rules.concat([
-      {
-        id: rules.rules.length,
-        type:
-          newRuleType === 'absolute'
-            ? 'absolute'
-            : newRuleType === 'relative'
-            ? 'relative'
-            : 'rest',
-        amount: newAmountInt,
-        companyUnit: {
-          id: parseInt(newCompanyId),
-          nazev: companyUnits.find((unit) => unit.id == parseInt(newCompanyId))?.nazev ?? 'N/A'
-        }
+
+    const newRule: Rule = {
+      id: rules.rules.length,
+      type:
+        newRuleType === 'absolute' ? 'absolute' : newRuleType === 'relative' ? 'relative' : 'rest',
+      amount: newAmountInt,
+      companyUnit: {
+        id: parseInt(newCompanyId),
+        nazev: companyUnits.find((unit) => unit.id == parseInt(newCompanyId))?.nazev ?? 'N/A'
       }
-    ]);
+    };
+
+    if (
+      !filterRuleset(
+        {
+          ...rules,
+          rules: [...rules.rules, newRule]
+        },
+        true
+      )
+    ) {
+      errorMessage = 'Částka řádků nemůže přesahovat celkovou částku faktury.';
+      return;
+    }
+
+    rules.rules = rules.rules.concat([newRule]);
 
     newAmount = '0';
   }
