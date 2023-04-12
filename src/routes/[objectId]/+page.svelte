@@ -163,7 +163,15 @@
             <td>{ruleset.name}</td>
             <td>
               <Flex direction="column" gap="4px">
-                {#each ruleset.rules as rule}
+                {#each ruleset.rules.sort((a, b) => {
+                  if (a.type === 'rest') {
+                    return 1;
+                  }
+                  if (a.type === b.type) {
+                    return b.amount - a.amount;
+                  }
+                  return a.type === 'relative' ? -1 : 1;
+                }) as rule}
                   <Flex alignItems="center">
                     <Styled
                       minWidth="6rem"
@@ -211,7 +219,7 @@
               </Styled>
             </td>
             <td>
-              <Button on:click={() => applyRuleset(ruleset)}>
+              <Button width="150px" on:click={() => applyRuleset(ruleset)}>
                 {#if $saving === ruleset.id}
                   Ukládám...
                 {:else}
