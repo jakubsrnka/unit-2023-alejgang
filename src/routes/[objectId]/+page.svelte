@@ -55,8 +55,9 @@
                       borderRadius="4px"
                     >
                       <Flex direction="row" justifyContent="center" width="100%">
-                        {rule.amount}
-                        {rule.type === 'absolute' ? 'Kč' : '%'}
+                        {rule.type === 'rest'
+                          ? 'Zbytek'
+                          : `${rule.amount} ${rule.type === 'absolute' ? 'Kč' : '%'}`}
                       </Flex>
                     </Styled>
 
