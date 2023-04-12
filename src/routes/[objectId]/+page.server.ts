@@ -1,11 +1,10 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import type { Invoice } from '$types/invoice';
-import { findAll, findOneBy } from '$lib/db';
 
 export const load = (async ({ cookies, params }) => {
-  const authSessionId = cookies.get('authSessionId')
-  const companyUrl = cookies.get('companyUrl')
+  const authSessionId = cookies.get('authSessionId');
+  const companyUrl = cookies.get('companyUrl');
 
   if (!authSessionId || !companyUrl) {
     throw error(404, {
@@ -13,9 +12,9 @@ export const load = (async ({ cookies, params }) => {
     });
   }
 
-  const invoiceId = params.objectId
+  const invoiceId = params.objectId;
 
-  console.log(`${companyUrl}/faktura-prijata/${invoiceId}.json?detail=full`)
+  console.log(`${companyUrl}/faktura-prijata/${invoiceId}.json?detail=full`);
 
   const invoice: Invoice | null = await fetch(
     `${companyUrl}/faktura-prijata/${invoiceId}.json?detail=full`,
@@ -28,14 +27,13 @@ export const load = (async ({ cookies, params }) => {
     .then((r) => r.json())
     .then((r) => {
       if (r.winstrom['faktura-prijata'].length !== 1) {
-        return null
+        return null;
       }
 
-      const resp = r.winstrom['faktura-prijata'][0]
+      const resp = r.winstrom['faktura-prijata'][0];
 
-      return { sum: resp.sumZklCelkem, name: resp.popis, company: resp.nazFirmy }
-    }
-    );
+      return { sum: resp.sumZklCelkem, name: resp.popis, company: resp.nazFirmy };
+    });
 
   if (!invoice) {
     throw error(404, {

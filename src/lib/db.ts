@@ -4,16 +4,22 @@ import { sendRequest } from '$lib/api';
 
 const ENDPOINT = 'global-store';
 
-async function getGlobalStore(key: string): Promise<GlobalStore | null> {
-  const store = await sendRequest<GlobalStore[]>(ENDPOINT, 'GET');
+async function getGlobalStore(
+  url: string,
+  session: string,
+  key: string
+): Promise<GlobalStore | null> {
+  const store = await sendRequest<GlobalStore[]>(url, session, ENDPOINT, 'GET');
   console.log(store);
   return store?.find((entity) => entity.klic === key) ?? null;
 }
 
 export async function getCollection<C extends keyof Database>(
+  url: string,
+  session: string,
   collection: C
 ): Promise<ValueOf<C>[]> {
-  const store = await getGlobalStore(`alejgang:database:${collection}`);
+  const store = await getGlobalStore(url, session, `alejgang:database:${collection}`);
   if (store === null) {
     return [];
   }
@@ -21,10 +27,12 @@ export async function getCollection<C extends keyof Database>(
 }
 
 export async function saveCollection<C extends keyof Database>(
+  url: string,
+  session: string,
   collection: C,
   data: ValueOf<C>[]
 ): Promise<boolean> {
-  const store = await getGlobalStore(`alejgang:database:${collection}`);
+  const store = await getGlobalStore(url, session, `alejgang:database:${collection}`);
   const value = JSON.stringify(data);
   console.log(value);
   if (store === null) {
@@ -32,7 +40,7 @@ export async function saveCollection<C extends keyof Database>(
       {
         [key: string]: string;
       }[]
-    >(ENDPOINT, 'POST', {
+    >(url, session, ENDPOINT, 'POST', {
       winstrom: {
         'global-store': {
           klic: `alejgang:database:${collection}`,
@@ -45,7 +53,7 @@ export async function saveCollection<C extends keyof Database>(
       {
         [key: string]: string;
       }[]
-    >(ENDPOINT + '/' + store.id, 'PUT', {
+    >(url, session, ENDPOINT + '/' + store.id, 'PUT', {
       winstrom: {
         'global-store': {
           id: store.id,
@@ -59,17 +67,21 @@ export async function saveCollection<C extends keyof Database>(
 }
 
 export async function findOneBy<C extends keyof Database>(
+  url: string,
+  session: string,
   collection: C,
   filters: Partial<ValueOf<C>> = {}
 ) {
-  return (await findBy(collection, filters))?.[0];
+  return (await findBy(url, session, collection, filters))?.[0];
 }
 
 export async function findBy<C extends keyof Database>(
+  url: string,
+  session: string,
   collection: C,
   filters: Partial<ValueOf<C>> = {}
 ) {
-  return (await findAll(collection)).filter((entity) => {
+  return (await findAll(url, session, collection)).filter((entity) => {
     for (const field of Object.keys(filters)) {
       const key = field as keyof ValueOf<C>;
       if (entity[key] !== filters[key]) {
@@ -80,14 +92,23 @@ export async function findBy<C extends keyof Database>(
   });
 }
 
-export async function findAll<C extends keyof Database>(collection: C): Promise<ValueOf<C>[]> {
-  return await getCollection(collection);
+export async function findAll<C extends keyof Database>(
+  url: string,
+  session: string,
+  collection: C
+): Promise<ValueOf<C>[]> {
+  return await getCollection(url, session, collection);
 }
 
-export async function save<C extends keyof Database>(collection: C, entity: ValueOf<C>) {
+export async function save<C extends keyof Database>(
+  url: string,
+  session: string,
+  collection: C,
+  entity: ValueOf<C>
+) {
   let found = false;
   const key = 'id' as keyof ValueOf<C>;
-  const data = (await getCollection(collection))
+  const data = (await getCollection(url, session, collection))
     .filter((item) => item[key] !== undefined)
     .map((item) => {
       if (item[key] === entity[key]) {
@@ -101,5 +122,5 @@ export async function save<C extends keyof Database>(collection: C, entity: Valu
       1) as ValueOf<C>[keyof ValueOf<C>];
     data.push(entity);
   }
-  return await saveCollection(collection, data);
+  return await saveCollection(url, session, collection, data);
 }

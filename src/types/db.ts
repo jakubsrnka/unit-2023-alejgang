@@ -1,9 +1,7 @@
-import type { RuleSet } from './rules';
-
 export type Database = {
   user: User[];
   role: Role[];
-  rulesets: RuleSetDb[];
+  ruleset: RuleSet[];
 };
 
 export type Collections = keyof Database;
@@ -24,6 +22,21 @@ export interface Role extends Entity {
   name: string;
 }
 
-export interface RuleSetDb extends Entity {
-  ruleset: RuleSet;
+export interface RuleSet extends Entity {
+  name: string;
+  rules: Rule[];
+}
+
+export interface Rule {
+  id: number;
+  type: RuleType;
+  amount: number;
+  companyUnit: CompanyUnit;
+}
+
+export type RuleType = 'absolute' | 'relative' | 'rest';
+
+export interface CompanyUnit {
+  id: number;
+  nazev: string;
 }

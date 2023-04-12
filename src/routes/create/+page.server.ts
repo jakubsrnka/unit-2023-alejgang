@@ -1,19 +1,19 @@
-import type { CompanyUnit } from '$types/rules';
+import { sendRequest } from '$lib/api';
+import type { CompanyUnit } from '$types/db';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ fetch, cookies }) => {
-  const companyUrl = cookies.get('companyUrl') ?? '';
-  const authSessionId = cookies.get('authSessionId') ?? '';
-
-  const companyUnits: Promise<CompanyUnit[]> = fetch(`${companyUrl}/stredisko.json?detail=full`, {
-    headers: {
-      'X-authSessionId': authSessionId
-    }
-  })
-    .then((r) => r.json())
-    .then((r) => r.winstrom.stredisko.map((s: any) => ({ id: parseInt(s.id), name: s.nazev })));
+export const load = (async ({ cookies }) => {
+  const params = new URLSearchParams();
+  params.append('detail', 'full');
+  const companyUnits = await sendRequest<CompanyUnit[]>(
+    cookies.get('companyUrl') ?? '',
+    cookies.get('authSessionId') ?? '',
+    'stredisko',
+    'GET',
+    params
+  );
 
   return {
-    companyUnits: await companyUnits
+    companyUnits: companyUnits ?? []
   };
 }) satisfies PageServerLoad;

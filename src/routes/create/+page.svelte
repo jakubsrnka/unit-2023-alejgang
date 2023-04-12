@@ -9,8 +9,8 @@
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
   import { save } from '$lib/db';
-  import type { RuleSetDb } from '$types/db';
-  import type { RuleSet } from '$types/rules';
+  import { companyUrl, sessionId } from '$lib/store';
+  import type { RuleSet } from '$types/db';
   import type { PageData } from './$types';
 
   export let data: PageData;
@@ -72,9 +72,9 @@
             ? 'relative'
             : 'rest',
         amount: newAmountInt,
-        companyUnit: {
-          id: parseInt(newCompanyId),
-          name: companyUnits.find((unit) => unit.id == parseInt(newCompanyId))?.name ?? ''
+        companyUnit: companyUnits.find((unit) => unit.id == parseInt(newCompanyId)) ?? {
+          id: 0,
+          nazev: 'N/A'
         }
       }
     ]);
@@ -95,13 +95,11 @@
       errorMessage = 'Nelze uložit sadu pravidel bez jména.';
       return;
     }
-    const ruleSet: RuleSetDb = {
-      ruleset: {
-        name: rules.name,
-        rules: rules.rules
-      }
+    const ruleSet: RuleSet = {
+      name: rules.name,
+      rules: rules.rules
     };
-    await save('rulesets', ruleSet);
+    await save($companyUrl, $sessionId, 'ruleset', ruleSet);
   }
 
   $: rules.name = setName;
@@ -158,7 +156,7 @@
           <Icon icon="arrow-right" /> středisko: <Styled
             padding="4px"
             backgroundColor="#ddd"
-            borderRadius="4px">{rule.companyUnit.name}</Styled
+            borderRadius="4px">{rule.companyUnit.nazev}</Styled
           >
         </Flex>
         <div on:click={() => removeRule(rule.id)} on:keypress={() => removeRule(rule.id)}>

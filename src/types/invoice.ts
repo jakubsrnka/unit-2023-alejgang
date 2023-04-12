@@ -1,5 +1,5 @@
 export interface Invoice {
-    sum: string
-    name: string
-    company: string
+  sum: string;
+  name: string;
+  company: string;
 }

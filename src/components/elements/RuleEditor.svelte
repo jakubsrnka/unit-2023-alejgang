@@ -1,6 +1,7 @@
 <script lang="ts">
   import Flex from '$components/layout/Flex.svelte';
-  import { createSelect, type CompanyUnit } from '$types/rules';
+  import { createSelect } from '$lib/utils';
+  import type { CompanyUnit } from '$types/db';
   import Input from '$components/elements/Input.svelte';
   import Select from '$components/elements/Select.svelte';
   import Grid from '$components/layout/Grid.svelte';

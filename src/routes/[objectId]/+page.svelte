@@ -4,7 +4,7 @@
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
   import { sessionId, companyUrl } from '$lib/store';
-  import type { RuleSet } from '$types/rules';
+  import type { RuleSet } from '$types/db';
   import type { PageData } from './$types';
 
   export let data: PageData;
@@ -22,7 +22,7 @@
           amount: 3000,
           companyUnit: {
             id: 1,
-            name: 'C'
+            nazev: 'C'
           }
         },
         {
@@ -31,7 +31,7 @@
           amount: 30,
           companyUnit: {
             id: 3,
-            name: 'M'
+            nazev: 'M'
           }
         }
       ]
@@ -45,7 +45,7 @@
           amount: 3000,
           companyUnit: {
             id: 1,
-            name: 'C'
+            nazev: 'C'
           }
         },
         {
@@ -54,7 +54,7 @@
           amount: 30,
           companyUnit: {
             id: 3,
-            name: 'M'
+            nazev: 'M'
           }
         }
       ]
@@ -116,7 +116,7 @@
                     <Icon size={16} icon="arrow-right" />
 
                     <Styled padding="4px 6px" backgroundColor="#ddd" borderRadius="4px"
-                      >{rule.companyUnit.name}</Styled
+                      >{rule.companyUnit.nazev}</Styled
                     >
                   </Flex>
                 {/each}

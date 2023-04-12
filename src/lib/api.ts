@@ -1,17 +1,16 @@
-import { sessionId, companyUrl, awaitStore } from '$lib/store';
 import type { Response } from '$types/api';
 
 export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export async function sendRequest<T, B = object>(
+  url: string,
+  session: string,
   key: string,
   method: Methods,
   body?: B,
   params: URLSearchParams = new URLSearchParams()
 ): Promise<T | null> {
-  const session = await awaitStore(sessionId);
-  const company = await awaitStore(companyUrl);
-  const response = await fetch(`${company}/${key}.json?${params.toString()}`, {
+  const response = await fetch(`${url}/${key}.json?${params.toString()}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
