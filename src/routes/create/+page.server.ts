@@ -10,6 +10,7 @@ export const load = (async ({ cookies }) => {
     cookies.get('authSessionId') ?? '',
     'stredisko',
     'GET',
+    undefined,
     params
   );
 
