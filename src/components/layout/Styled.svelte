@@ -12,6 +12,7 @@
   export let backgroundColor = 'transparent';
   export let zIndex = 'auto';
   export let minWidth = 'initial';
+  export let flexGrow = '0';
 
   onMount(() => {
     margin = parseMargin(margin);
@@ -32,6 +33,7 @@
     --background-color: ${backgroundColor};
     --z-index: ${zIndex};
     --min-width: ${minWidth};
+    --flex-grow: ${flexGrow};
   `}
 >
   <slot />
@@ -49,5 +51,6 @@
     background-color: var(--background-color);
     z-index: var(--z-index);
     min-width: var(--min-width);
+    flex-grow: var(--flex-grow);
   }
 </style>

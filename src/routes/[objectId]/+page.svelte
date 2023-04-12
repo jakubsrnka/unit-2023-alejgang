@@ -15,6 +15,8 @@
 
   const saving = writable<string | undefined>(undefined);
 
+  const colors = ['#DDF9C1', '#F8DDA4', '#A4C2A5'];
+
   function filterRuleset(ruleset: RuleSet) {
     const sum = parseInt(data.invoice.sum);
     const perctSum = ruleset.rules.reduce((acc, rule) => {
@@ -186,7 +188,30 @@
               </Flex>
             </td>
             <td>
-              <Button width="150px" on:click={() => applyRuleset(ruleset)}>
+              <Styled border="2px solid #aaaaaaaa" height="30px" width="100%" borderRadius="4px">
+                <Flex height="100%" width="100%" gap="">
+                  {#each ruleset.rules as rule, i}
+                    <Styled
+                      width={rule.type === 'relative'
+                        ? rule.amount + '%'
+                        : rule.type === 'absolute'
+                        ? rule.amount / parseInt(data.invoice.sum) + '%'
+                        : 'auto'}
+                      backgroundColor={colors[colors.length % (i + 1)]}
+                      height="100%"
+                      minWidth="32px"
+                      flexGrow={rule.type === 'rest' ? '1' : '0'}
+                    >
+                      <Flex width="100%" alignItems="center" justifyContent="center">
+                        {rule.companyUnit.nazev}
+                      </Flex>
+                    </Styled>
+                  {/each}
+                </Flex>
+              </Styled>
+            </td>
+            <td>
+              <Button on:click={() => applyRuleset(ruleset)}>
                 {#if $saving === ruleset.id}
                   Ukládám...
                 {:else}
@@ -229,6 +254,10 @@
 
   tr > td:first-child {
     font-weight: 600;
+  }
+  tr > td:nth-child(3) {
+    width: 50%;
+    padding-right: 32px;
   }
 
   tr > td:last-child {
