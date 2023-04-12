@@ -158,4 +158,6 @@
     <RuleEditor bind:newAmount bind:newCompanyId bind:newRuleType {companyUnits} />
     <Button on:click={addRule}>Přidat pravidlo</Button>
   </Flex>
+
+  <Button on:click={() => console.log(rules)}>gimme the stuff</Button>
 </Main>

@@ -1,6 +1,9 @@
+import type { RuleSet } from "./rules";
+
 export type Database = {
   user: User[];
   role: Role[];
+  rulesets: RuleSetDb[];
 };
 
 export type Collections = keyof Database;
@@ -13,10 +16,14 @@ export interface Entity {
   id?: string;
 }
 
-export interface User {
+export interface User extends Entity {
   email: string;
 }
 
-export interface Role {
+export interface Role extends Entity {
   name: string;
+}
+
+export interface RuleSetDb extends Entity {
+  ruleset: RuleSet
 }

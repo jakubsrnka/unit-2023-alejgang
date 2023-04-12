@@ -9,14 +9,14 @@
 
 <style lang="scss">
   .heading {
-    font-size: 36px;
-    line-height: 41px;
+    font-size: 28px;
+    line-height: 40px;
     text-align: var(--text-align);
   }
   @include mobile {
     .heading {
-      font-size: 28px;
-      line-height: 40px;
+      font-size: 20px;
+      line-height: 32px;
       text-align: var(--text-align-mobile);
     }
   }

@@ -16,7 +16,7 @@
   export let target: string | undefined = undefined;
   export let slimness: 'slim' | 'super-slim' | false = false;
   export let padding =
-    slimness === 'super-slim' ? '0 22px' : slimness === 'slim' ? '0 20px' : '0 30px';
+    slimness === 'super-slim' ? '0 18px' : slimness === 'slim' ? '0 20px' : '0 28px';
 </script>
 
 <ConditionalWrapper tag={href && 'a'} {href} {target}>
@@ -37,7 +37,7 @@
 
 <style lang="scss">
   .button {
-    height: 56px;
+    height: 48px;
     line-height: 56px;
     width: var(--button-width);
     text-align: center;
@@ -51,7 +51,7 @@
     -webkit-appearance: none;
     outline: none;
     border: none;
-    font-size: 16px;
+    font-size: 14px;
     transition: 0.1s ease all;
     padding: var(--button-padding);
     border-radius: 28px;

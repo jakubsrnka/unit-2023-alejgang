@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import type { Invoice } from '$types/invoice';
+import { findAll, findOneBy } from '$lib/db';
 
 export const load = (async ({ cookies, params }) => {
   const authSessionId = cookies.get('authSessionId')
