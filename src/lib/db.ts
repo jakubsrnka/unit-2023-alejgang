@@ -122,3 +122,16 @@ export async function save<C extends keyof Database>(
   }
   return await saveCollection(url, session, collection, data);
 }
+
+export async function remove<C extends keyof Database>(
+  url: string,
+  session: string,
+  collection: C,
+  id: number
+) {
+  const key = 'id' as keyof ValueOf<C>;
+  const data = (await getCollection(url, session, collection)).filter(
+    (item) => item[key] !== undefined && item[key] !== id
+  );
+  return await saveCollection(url, session, collection, data);
+}

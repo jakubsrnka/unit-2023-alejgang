@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import Button from '$components/elements/Button.svelte';
   import Icon from '$components/elements/Icon.svelte';
   import Input from '$components/elements/Input.svelte';
@@ -8,7 +9,7 @@
   import Flex from '$components/layout/Flex.svelte';
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
-  import { save } from '$lib/db';
+  import { remove, save } from '$lib/db';
   import { companyUrl, sessionId } from '$lib/store';
   import type { RuleSet } from '$types/db';
   import type { PageData } from './$types';
@@ -24,7 +25,6 @@
   let errorMessage: string | undefined = undefined;
   const companyUnits = data.companyUnits;
 
-  console.log(data.ruleset);
   let rules = data.ruleset;
 
   function addRule() {
@@ -100,6 +100,14 @@
     await save($companyUrl, $sessionId, 'ruleset', ruleSet);
   }
 
+  async function removeRules() {
+    if (rules.id === undefined) {
+      return;
+    }
+    await remove($companyUrl, $sessionId, 'ruleset', parseInt(rules.id));
+    goto('/rules');
+  }
+
   $: rules.name = setName;
 </script>
 
@@ -136,7 +144,7 @@
 {/if}
 
 <Main>
-  <Subheading>Vytvořit novou sadu pravidel</Subheading>
+  <Subheading>Upravit sadu pravidel</Subheading>
   <Styled padding="30px 0 20px">
     <Input name="setName" bind:value={setName} label="Jméno sady pravidel" width="420px" />
   </Styled>
@@ -186,5 +194,10 @@
 
   <Divider />
 
-  <Button on:click={saveRules}>Uložit sadu pravidel</Button>
+  <Flex>
+    <Button on:click={saveRules}>Uložit sadu pravidel</Button>
+    <Button on:click={removeRules}>Smazat sadu pravidel</Button>
+  </Flex>
+
+  <Divider />
 </Main>
