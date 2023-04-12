@@ -74,3 +74,38 @@ export function parseMargin(
   }
   return margin;
 }
+
+/**
+ * Margin interface for use in CSS
+ */
+export type Padding = Directions;
+
+/**
+ * Default margin to be parsed into CSS as a variable using @function parseMargin()
+ */
+export const DefaultPadding: Padding = {
+  top: '0',
+  right: '0',
+  bottom: '0',
+  left: '0'
+};
+
+/**
+ * parses @param padding for usage into CSS / SCSS as a variable directly
+ * @param {string | Padding} padding - padding to be parsed into a string
+ * @param {Padding} defaultPadding - default paddings to include if some properties of @param padding are omitted, defaults to @const DefaultPadding
+ * @returns parsed padding to be directly used inside CSS
+ */
+export function parsePadding(
+  padding: string | Padding,
+  defaultPadding: Padding = DefaultPadding
+): string {
+  if (typeof padding === 'object') {
+    padding = {
+      ...defaultPadding,
+      ...padding
+    };
+    return `${padding.top} ${padding.right} ${padding.bottom} ${padding.left}`;
+  }
+  return padding;
+}
