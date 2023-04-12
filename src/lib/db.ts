@@ -104,22 +104,14 @@ export async function save<C extends keyof Database>(
   collection: C,
   entity: ValueOf<C>
 ) {
-  let found = false;
   const key = 'id' as keyof ValueOf<C>;
-  const data = (await getCollection(url, session, collection))
-    .filter((item) => item[key] !== undefined)
-    .map((item) => {
-      if (item[key] === entity[key]) {
-        found = true;
-        return entity;
-      }
-      return item;
-    });
-  if (!found) {
-    entity[key] = (((data[data.length - 1]?.[key] ?? 0) as number) +
-      1) as ValueOf<C>[keyof ValueOf<C>];
-    data.push(entity);
-  }
+  const coll = await getCollection(url, session, collection);
+  console.log(coll);
+  console.log(entity);
+  const data = coll.filter((item) => item[key] !== undefined && item[key] !== entity[key]);
+  entity[key] = (((data[data.length - 1]?.[key] ?? 0) as number) +
+    1) as ValueOf<C>[keyof ValueOf<C>];
+  data.push(entity);
   return await saveCollection(url, session, collection, data);
 }
 

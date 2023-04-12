@@ -26,6 +26,7 @@
   const companyUnits = data.companyUnits;
 
   let rules = data.ruleset;
+  setName = rules.name;
 
   function addRule() {
     const newAmountInt = parseInt(newAmount);
@@ -94,6 +95,7 @@
       return;
     }
     const ruleSet: RuleSet = {
+      id: rules.id,
       name: rules.name,
       rules: rules.rules
     };
