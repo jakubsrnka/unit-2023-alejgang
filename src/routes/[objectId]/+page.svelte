@@ -3,14 +3,10 @@
   import Flex from '$components/layout/Flex.svelte';
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
-  import { sessionId, companyUrl } from '$lib/store';
   import type { RuleSet } from '$types/db';
   import type { PageData } from './$types';
 
   export let data: PageData;
-
-  sessionId.set(data.authSessionId);
-  companyUrl.set(data.companyUrl);
 
   const rules: RuleSet[] = [
     {

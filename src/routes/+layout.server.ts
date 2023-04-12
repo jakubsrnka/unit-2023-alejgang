@@ -8,7 +8,10 @@ export const load: LayoutServerLoad = async ({ url, cookies }) => {
     throw redirect(300, url.searchParams.get('objectId') ?? '');
   }
 
-  return {};
+  return {
+    authSessionId: cookies.get('authSessionId') ?? '',
+    companyUrl: cookies.get('companyUrl') ?? ''
+  };
 };
 
 export const prerender = false;

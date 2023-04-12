@@ -42,8 +42,6 @@ export const load = (async ({ cookies, params }) => {
   }
 
   return {
-    authSessionId: cookies.get('authSessionId') ?? '',
-    companyUrl: cookies.get('companyUrl') ?? '',
     invoice: invoice
   };
 }) satisfies PageServerLoad;
