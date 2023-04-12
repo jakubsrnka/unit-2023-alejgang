@@ -10,6 +10,7 @@
   export let border = 'none';
   export let borderRadius = '0';
   export let backgroundColor = 'transparent';
+  export let zIndex = 'auto';
 
   onMount(() => {
     margin = parseMargin(margin);
@@ -28,6 +29,7 @@
     --border: ${border};
     --border-radius: ${borderRadius};
     --background-color: ${backgroundColor};
+    --z-index: ${zIndex};
   `}
 >
   <slot />
@@ -43,5 +45,6 @@
     border: var(--border);
     border-radius: var(--border-radius);
     background-color: var(--background-color);
+    z-index: var(--z-index);
   }
 </style>

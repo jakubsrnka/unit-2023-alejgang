@@ -8,17 +8,30 @@
   export let width = '100%';
   export let name: string;
   export let required = false;
+  export let value = '';
 </script>
 
 <div class="select" style="--width: {width};">
   <div class="select__title">
     <h3>{title}</h3>
   </div>
-  {#each Object.entries(items) as [value, item]}
-    <div class="select__item">
+  {#each Object.entries(items) as [itemValue, item]}
+    <div
+      class="select__item"
+      on:click={() => (value = itemValue)}
+      on:keypress={() => (value = itemValue)}
+    >
       <div class="select__item__divider" />
-      <input type="radio" id={value} {name} {value} {required} class="select__item__input" hidden />
-      <label for={value}>
+      <input
+        type="radio"
+        id={itemValue}
+        {name}
+        value={itemValue}
+        {required}
+        class="select__item__input"
+        hidden
+      />
+      <label for={itemValue}>
         <div class="select__item__alt" />
         {item.label}
         {#if item.icon}
