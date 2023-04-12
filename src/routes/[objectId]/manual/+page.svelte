@@ -36,7 +36,7 @@
     return sumSumSum == sum || ((isRest || flag) && sumSumSum < sum);
   }
 
-  let setName: string;
+  let setName = 'Template 1';
 
   export let newAmount: string;
   export let newRuleType: string;
@@ -113,7 +113,7 @@
   }
 
   let rules: RuleSet = {
-    name: '',
+    name: 'Template 1',
     rules: []
   };
 

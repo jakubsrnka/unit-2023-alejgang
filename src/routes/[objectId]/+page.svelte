@@ -37,6 +37,8 @@
     return sumSumSum == sum || (isRest && sumSumSum < sum);
   }
 
+  let appliedRuleset: string | undefined = undefined;
+
   async function applyRuleset(ruleset: RuleSet) {
     const sum = parseInt(data.invoice.sum);
     const totalApplied = ruleset.rules.reduce((acc, rule) => {
@@ -76,6 +78,7 @@
         }
       })
     ) {
+      appliedRuleset = ruleset.id;
       errorMessage = 'Faktura byla úspěšně rozdělena';
     } else {
       errorMessage = 'Nepodařilo se rozdělit fakturu';
@@ -222,6 +225,8 @@
               <Button width="150px" on:click={() => applyRuleset(ruleset)}>
                 {#if $saving === ruleset.id}
                   Ukládám...
+                {:else if appliedRuleset === ruleset.id}
+                  Aplikováno
                 {:else}
                   Použít
                 {/if}
