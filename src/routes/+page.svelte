@@ -1,8 +1,10 @@
 <script lang="ts">
-  import Button from '$components/elements/Button.svelte';
-  import Flex from '$components/layout/Flex.svelte';
-</script>
+  import { redirect } from '@sveltejs/kit';
+  import type { PageData } from './$types';
 
-<Flex alignItems="center" justifyContent="center" height="100vh" width="100%">
-  <Button href="/admin">Login</Button>
-</Flex>
+  export let data: PageData;
+
+  export function load() {
+    throw redirect(302, data.location);
+  }
+</script>
