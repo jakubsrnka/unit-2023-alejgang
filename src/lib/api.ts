@@ -6,11 +6,12 @@ export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export async function sendRequest<T, B = object>(
   key: string,
   method: Methods,
-  body?: B
+  body?: B,
+  params: URLSearchParams = new URLSearchParams()
 ): Promise<T | null> {
   const session = await awaitStore(sessionId);
   const company = await awaitStore(companyUrl);
-  const response = await fetch(`${company}/${key}.json`, {
+  const response = await fetch(`${company}/${key}.json?${params.toString()}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
