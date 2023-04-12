@@ -15,7 +15,10 @@
 <Styled width="100vw" height="80px" position="fixed" padding="0 3vw" backgroundColor="#f5f3f1">
   <Flex width="100%" height="100%" alignItems="center" justifyContent="space-between">
     <Heading>Rozúčtování</Heading>
-    <Button href="/create">Vytvořit sadu pravidel</Button>
+    <Flex>
+      <Button href="/rules">Všechny sady pravidel</Button>
+      <Button href="/create">Vytvořit sadu pravidel</Button>
+    </Flex>
   </Flex>
 </Styled>
 <slot />
