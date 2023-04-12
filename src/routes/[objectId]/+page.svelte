@@ -12,6 +12,8 @@
   import { run_all } from 'svelte/internal';
 
   export let data: PageData;
+  let errorMessage: string | undefined = undefined;
+
   const saving = writable<string | undefined>(undefined);
 
   function filterRuleset(ruleset: RuleSet) {
@@ -46,34 +48,72 @@
       return acc;
     }, 0);
     $saving = ruleset.id;
-    await sendRequest($companyUrl, $sessionId, 'faktura-prijata', 'POST', {
-      winstrom: {
-        '@version': '1.0',
-        'faktura-prijata': [
-          {
-            id: data.objectId,
-            bezPolozek: false,
-            'polozkyFaktury@removeAll': true,
-            polozkyFaktury: ruleset.rules.map((rule) => ({
-              nazev: `${data.invoice.name} - ${rule.companyUnit.nazev}`,
-              mnozMj: 1,
-              cenaMj:
-                rule.type === 'rest'
-                  ? sum - totalApplied
-                  : rule.type === 'absolute'
-                  ? rule.amount
-                  : (sum * rule.amount) / 100,
-              typSzbDphK: 'typSzbDph.dphOsv',
-              kopStred: false,
-              stredisko: rule.companyUnit.id
-            }))
-          }
-        ]
-      }
-    });
+    if (
+      await sendRequest($companyUrl, $sessionId, 'faktura-prijata', 'POST', {
+        winstrom: {
+          '@version': '1.0',
+          'faktura-prijata': [
+            {
+              id: data.objectId,
+              bezPolozek: false,
+              'polozkyFaktury@removeAll': true,
+              polozkyFaktury: ruleset.rules.map((rule) => ({
+                nazev: `${data.invoice.name} - ${rule.companyUnit.nazev}`,
+                mnozMj: 1,
+                cenaMj:
+                  rule.type === 'rest'
+                    ? sum - totalApplied
+                    : rule.type === 'absolute'
+                    ? rule.amount
+                    : (sum * rule.amount) / 100,
+                typSzbDphK: 'typSzbDph.dphOsv',
+                kopStred: false,
+                stredisko: rule.companyUnit.id
+              }))
+            }
+          ]
+        }
+      })
+    ) {
+      errorMessage = 'Faktura byla úspěšně rozdělena';
+    } else {
+      errorMessage = 'Nepodařilo se rozdělit fakturu';
+    }
     $saving = undefined;
   }
 </script>
+
+{#if errorMessage}
+  <Styled
+    position="fixed"
+    width="100vw"
+    height="100vh"
+    zIndex="1000"
+    backgroundColor="rgba(0,0,0,.2)"
+  >
+    <Flex width="100vw" height="100vh" alignItems="center" justifyContent="center">
+      <Styled
+        width="420px"
+        padding="32px"
+        height="240px"
+        backgroundColor="#fff"
+        borderRadius="16px"
+        zIndex="1000"
+      >
+        <Flex
+          height="100%"
+          width="100%"
+          alignItems="center"
+          direction="column"
+          justifyContent="space-between"
+        >
+          {errorMessage}
+          <Button on:click={() => (errorMessage = undefined)}>Ok</Button>
+        </Flex>
+      </Styled>
+    </Flex>
+  </Styled>
+{/if}
 
 <Main>
   <h2>Detail faktury</h2>
@@ -137,7 +177,7 @@
               </Flex>
             </td>
             <td>
-              <Button on:click={() => applyRuleset(ruleset)}>
+              <Button width="150px" on:click={() => applyRuleset(ruleset)}>
                 {#if $saving === ruleset.id}
                   Ukládám...
                 {:else}
