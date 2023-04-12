@@ -11,7 +11,10 @@
   .subheading {
     font-size: 24px;
     line-height: 31px;
+    font-weight: bold;
     text-align: var(--text-align);
+
+    margin-bottom: 1rem;
   }
   @include mobile {
     .subheading {

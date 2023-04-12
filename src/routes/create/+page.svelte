@@ -174,8 +174,11 @@
     alignItems="start"
   >
     <RuleEditor bind:newAmount bind:newCompanyId bind:newRuleType {companyUnits} />
+
     <Button on:click={addRule}>Přidat pravidlo</Button>
   </Flex>
+
+  <Divider />
 
   <Button on:click={saveRules}>Uložit sadu pravidel</Button>
 </Main>

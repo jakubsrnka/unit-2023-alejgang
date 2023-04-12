@@ -9,8 +9,8 @@
 
 <style lang="scss">
   .heading {
-    font-size: 28px;
-    line-height: 40px;
+    font-size: 24px;
+    line-height: 42px;
     text-align: var(--text-align);
   }
   @include mobile {

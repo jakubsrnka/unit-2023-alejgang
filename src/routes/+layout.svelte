@@ -14,7 +14,7 @@
 
 <Styled width="100vw" height="80px" position="fixed" padding="0 3vw" backgroundColor="#f5f3f1">
   <Flex width="100%" height="100%" alignItems="center" justifyContent="space-between">
-    <Heading>UnIT 2023 - Rozúčtování</Heading>
+    <Heading>Rozúčtování</Heading>
     <Button href="/create">Vytvořit sadu pravidel</Button>
   </Flex>
 </Styled>
