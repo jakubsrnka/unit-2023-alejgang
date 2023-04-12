@@ -10,14 +10,13 @@ export type Entities = Database extends { [key: string]: (infer T)[] } ? T : nev
 export type ValueOf<C extends Collections> = Database[C] extends (infer T)[] ? T : never;
 
 export interface Entity {
-  id: string;
-  lastUpdate: Date;
+  id?: string;
 }
 
-export interface User extends Entity {
+export interface User {
   email: string;
 }
 
-export interface Role extends Entity {
+export interface Role {
   name: string;
 }
