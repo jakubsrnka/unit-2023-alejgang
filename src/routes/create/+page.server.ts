@@ -11,7 +11,7 @@ export const load = (async ({ fetch, cookies }) => {
     }
   })
     .then((r) => r.json())
-    .then((r) => r.winstrom.stredisko.map((s: any) => ({ id: s.id, name: s.nazev })));
+    .then((r) => r.winstrom.stredisko.map((s: any) => ({ id: parseInt(s.id), name: s.nazev })));
 
   return {
     companyUnits: await companyUnits

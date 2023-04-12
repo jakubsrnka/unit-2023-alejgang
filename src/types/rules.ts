@@ -1,4 +1,4 @@
-export type RuleType = 'absolute' | 'relative';
+export type RuleType = 'absolute' | 'relative' | 'rest';
 
 export interface CompanyUnit {
   id: number;

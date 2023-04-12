@@ -13,17 +13,20 @@
 </script>
 
 <Grid templateColumns="1fr 1fr" alignItems="start" gap="64px">
-  <Flex direction="column" gap="32px">
+  <Flex direction="column" gap="32px" width="420px">
     <Select
       title="Typ pravidla"
       name="newRuleType"
       items={{
         absolute: { label: 'Částka' },
-        relative: { label: 'Procento' }
+        relative: { label: 'Procento' },
+        rest: { label: 'Zbytek' }
       }}
       bind:value={newRuleType}
     />
-    <Input name="newRuleAmount" bind:value={newAmount} label="Hodnota pravidla" width="420px" />
+    {#if newRuleType !== 'rest'}
+      <Input name="newRuleAmount" bind:value={newAmount} label="Hodnota pravidla" width="420px" />
+    {/if}
   </Flex>
   <Select
     title="Střediska"
