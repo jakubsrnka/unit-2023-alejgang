@@ -1,12 +1,18 @@
 <script lang="ts">
+  import Button from '$components/elements/Button.svelte';
   import Icon from '$components/elements/Icon.svelte';
   import Flex from '$components/layout/Flex.svelte';
   import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
+  import { sendRequest } from '$lib/api';
+  import { sessionId, companyUrl } from '$lib/store';
   import type { RuleSet } from '$types/db';
+  import { writable } from 'svelte/store';
   import type { PageData } from './$types';
+  import { run_all } from 'svelte/internal';
 
   export let data: PageData;
+  const saving = writable<string | undefined>(undefined);
 
   function filterRuleset(ruleset: RuleSet) {
     const sum = parseInt(data.invoice.sum);
@@ -26,6 +32,46 @@
     const perctSumAbsolute = (sum * perctSum) / 100;
     const sumSumSum = perctSumAbsolute + absoluteSum;
     return sumSumSum == sum || (isRest && sumSumSum < sum);
+  }
+
+  async function applyRuleset(ruleset: RuleSet) {
+    const sum = parseInt(data.invoice.sum);
+    const totalApplied = ruleset.rules.reduce((acc, rule) => {
+      if (rule.type === 'relative') {
+        return acc + (sum * rule.amount) / 100;
+      }
+      if (rule.type === 'absolute') {
+        return acc + rule.amount;
+      }
+      return acc;
+    }, 0);
+    $saving = ruleset.id;
+    await sendRequest($companyUrl, $sessionId, 'faktura-prijata', 'POST', {
+      winstrom: {
+        '@version': '1.0',
+        'faktura-prijata': [
+          {
+            id: data.objectId,
+            bezPolozek: false,
+            'polozkyFaktury@removeAll': true,
+            polozkyFaktury: ruleset.rules.map((rule) => ({
+              nazev: `${data.invoice.name} - ${rule.companyUnit.nazev}`,
+              mnozMj: 1,
+              cenaMj:
+                rule.type === 'rest'
+                  ? sum - totalApplied
+                  : rule.type === 'absolute'
+                  ? rule.amount
+                  : (sum * rule.amount) / 100,
+              typSzbDphK: 'typSzbDph.dphOsv',
+              kopStred: false,
+              stredisko: rule.companyUnit.id
+            }))
+          }
+        ]
+      }
+    });
+    $saving = undefined;
   }
 </script>
 
@@ -90,14 +136,20 @@
                 {/each}
               </Flex>
             </td>
+            <td>
+              <Button on:click={() => applyRuleset(ruleset)}>
+                {#if $saving === ruleset.id}
+                  Ukládám...
+                {:else}
+                  Použít
+                {/if}
+              </Button>
+            </td>
           </tr>
         {/each}
       </tbody>
     </table>
   </Styled>
-  <!-- <p>Object: {data.objectId}</p>
-  <p>Session: {$sessionId}</p>
-  <p>Company: {$companyUrl}</p> -->
 </Main>
 
 <style lang="scss">
@@ -128,7 +180,7 @@
 
   tr > td:last-child {
     font-weight: 500;
-    width: 80%;
+    width: 10%;
 
     text-align: left;
   }
