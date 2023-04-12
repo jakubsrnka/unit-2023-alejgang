@@ -2,7 +2,6 @@
   import Button from '$components/elements/Button.svelte';
   import Heading from '$components/elements/Heading.svelte';
   import Flex from '$components/layout/Flex.svelte';
-  import Main from '$components/layout/Main.svelte';
   import Styled from '$components/layout/Styled.svelte';
 </script>
 
@@ -12,6 +11,4 @@
     <Button href="/create">Vytvořit sadu pravidel</Button>
   </Flex>
 </Styled>
-<Main>
-  <slot />
-</Main>
+<slot />

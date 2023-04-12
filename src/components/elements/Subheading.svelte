@@ -9,7 +9,7 @@
 
 <style lang="scss">
   .subheading {
-    font-size: 17px;
+    font-size: 24px;
     line-height: 31px;
     text-align: var(--text-align);
   }
