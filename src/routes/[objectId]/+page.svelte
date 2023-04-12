@@ -7,6 +7,26 @@
   import type { PageData } from './$types';
 
   export let data: PageData;
+
+  function filterRuleset(ruleset: RuleSet) {
+    const sum = parseInt(data.invoice.sum);
+    const perctSum = ruleset.rules.reduce((acc, rule) => {
+      if (rule.type === 'relative') {
+        return acc + rule.amount;
+      }
+      return acc;
+    }, 0);
+    const absoluteSum = ruleset.rules.reduce((acc, rule) => {
+      if (rule.type === 'absolute') {
+        return acc + rule.amount;
+      }
+      return acc;
+    }, 0);
+    const isRest = ruleset.rules.some((rule) => rule.type === 'rest');
+    const perctSumAbsolute = (sum * perctSum) / 100;
+    const sumSumSum = perctSumAbsolute + absoluteSum;
+    return sumSumSum == sum || (isRest && sumSumSum < sum);
+  }
 </script>
 
 <Main>
@@ -41,7 +61,7 @@
   <Styled padding="0 8px" backgroundColor="#eee" borderRadius="4px" width="100%">
     <table>
       <tbody>
-        {#each data.rulesets as ruleset}
+        {#each data.rulesets.filter(filterRuleset) as ruleset}
           <tr>
             <td>{ruleset.name}</td>
             <td>

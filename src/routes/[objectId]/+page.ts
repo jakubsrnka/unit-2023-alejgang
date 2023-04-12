@@ -1,4 +1,3 @@
-import { findAll } from '$lib/db';
 import type { PageLoad } from './$types';
 
 export const load = (async ({ data, params }) => {
